@@ -4,10 +4,13 @@ using System.Collections.Generic;
 using Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 namespace SurvivorZombies.Player  {
 
-    public class AimingController : MonoBehaviour  {
+    public class AimingController : MonoBehaviour {
+        public Image crossHairAiming;
+        public Image crossHair;
         [SerializeField] private PlayerInput m_playerInput;
         private CinemachineVirtualCamera m_virtualAimCamera;
 
@@ -38,6 +41,8 @@ namespace SurvivorZombies.Player  {
             else {
                 m_virtualAimCamera.Priority -= m_priorityBoost;
             }
+            crossHair.gameObject.SetActive(!isAiming);
+            crossHairAiming.gameObject.SetActive(isAiming);
         }
     }
 }

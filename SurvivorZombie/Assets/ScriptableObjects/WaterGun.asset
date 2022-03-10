@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01e7735651b51cf4bb745bd46c3f3f6f, type: 3}
   m_Name: WaterGun
   m_EditorClassIdentifier: 
-  Bullet: {fileID: 5872731437903137041, guid: 2ddc682cb2da19548854ce58a9cb0b98, type: 3}
+  Bullet: {fileID: 1341294748248070400, guid: a65154dda57830546bf5443fe1d0a0b8, type: 3}
   Damage: 50
   FireRate: 0.5
