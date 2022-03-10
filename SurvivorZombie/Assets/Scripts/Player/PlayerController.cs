@@ -5,12 +5,13 @@ using UnityEngine.InputSystem;
 namespace SurvivorZombies.Player.Movement  {
 
     [RequireComponent(typeof(CharacterController), typeof(PlayerInput))]
-    public class PlayerController : MonoBehaviour
-    {
+    public class PlayerController : MonoBehaviour  {
+        
         [SerializeField] private Weapon m_currentWeapon;
         private CharacterController m_characterController;
         private PlayerInput m_playerInput;
         private Vector3 m_playerVelocity;
+        private Vector3 m_velocityDelta;
         private bool m_isGrounded;
         private bool m_isShooting;
         private Transform m_cameraTranform;
@@ -23,6 +24,13 @@ namespace SurvivorZombies.Player.Movement  {
         private InputAction m_jumpAction;
         private InputAction m_shootAction;
 
+        public Vector3 VelocityDelta => m_velocityDelta;
+
+        public bool IsGrounded => m_isGrounded;
+
+        public delegate void OnPlayerJump();
+        public static event OnPlayerJump onJump;
+        
         private void Awake()  {
             m_characterController = GetComponent<CharacterController>();
             m_playerInput = GetComponent<PlayerInput>();
@@ -49,7 +57,7 @@ namespace SurvivorZombies.Player.Movement  {
             m_isShooting = isShooting;
         }
         
-        private void Update()  {
+        private void FixedUpdate()  {
 
             if (m_isShooting) {
                 m_currentWeapon.Shoot();    
@@ -59,21 +67,24 @@ namespace SurvivorZombies.Player.Movement  {
             if (m_isGrounded && m_playerVelocity.y < 0)  {
                 m_playerVelocity.y = 0f;
             }
-            
+
+            var oldPos = transform.position;
             var move = new Vector3(m_moveAction.ReadValue<Vector2>().x, 0, m_moveAction.ReadValue<Vector2>().y);
             move = move.x * m_cameraTranform.right.normalized + move.z * m_cameraTranform.forward.normalized;
             move.y = 0;
             m_characterController.Move(move * Time.deltaTime * m_playerSpeed);
             
             if (m_jumpAction.triggered && m_isGrounded) {
+                onJump?.Invoke();
                 m_playerVelocity.y += Mathf.Sqrt(m_jumpHeight * -3.0f * m_gravityValue);
             }
 
             m_playerVelocity.y += m_gravityValue * Time.deltaTime;
             m_characterController.Move(m_playerVelocity * Time.deltaTime);
+            m_velocityDelta = transform.position - oldPos;
             
             var rotation = Quaternion.Euler(0, m_cameraTranform.eulerAngles.y, 0);
-            transform.rotation = Quaternion.Lerp(transform.rotation, rotation, 5f);
+            transform.rotation = Quaternion.Lerp(transform.rotation, rotation, 6f);
         }
     }
 }
