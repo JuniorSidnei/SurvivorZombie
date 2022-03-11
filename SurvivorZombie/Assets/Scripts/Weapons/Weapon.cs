@@ -36,7 +36,8 @@ namespace SurvivorZombies.Weapons {
             } 
             
             var aimDir = (mouseWorldPos - barrelSpawn.position).normalized;
-            Instantiate(weaponData.Bullet, barrelSpawn.transform.position, quaternion.LookRotation(aimDir, Vector3.up));
+            var bullet = Instantiate(weaponData.Bullet, barrelSpawn.transform.position, quaternion.LookRotation(aimDir, Vector3.up));
+            bullet.GetComponent<Bullet>().SetDamage(weaponData.Damage);
             m_fireRate = weaponData.FireRate;
         }
     }

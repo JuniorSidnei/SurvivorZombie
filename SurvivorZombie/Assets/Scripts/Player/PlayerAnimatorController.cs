@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace SurvivorZombies.Player.Animations {
     
-    public class AnimatorController : MonoBehaviour {
+    public class PlayerAnimatorController : MonoBehaviour {
         
         [SerializeField] private PlayerController m_playerController;
         private Animator m_animator;
