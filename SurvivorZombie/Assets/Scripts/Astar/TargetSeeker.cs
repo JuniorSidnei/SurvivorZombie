@@ -28,19 +28,26 @@ public class TargetSeeker : MonoBehaviour {
 
     public Vector3 Velocity => m_positionDelta;
 
+    private void OnEnable() {
+        ZombieConstitution.onDeath += OnDeath;
+    }
+
+    private void OnDisable() {
+        ZombieConstitution.onDeath -= OnDeath;
+    }
+
     public void Awake () {
         m_seeker = GetComponent<Seeker>();
         m_controller = GetComponent<CharacterController>();
         m_photonView = GetComponent<PhotonView>();
-        
-        ZombieConstitution.onDeath += OnDeath;
     }
 
     private void OnDeath(GameObject zombie) {
         if (!m_photonView.IsMine) return;
+        if (zombie != gameObject) return;
         
         m_isDead = true;
-        Invoke(nameof(OnDestroyGameobject), 4.1f);
+        Invoke(nameof(OnDestroyGameobject), 3.1f);
     }
 
     private void OnDestroyGameobject() {

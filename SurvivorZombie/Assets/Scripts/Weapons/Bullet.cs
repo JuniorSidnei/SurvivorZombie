@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using SurvivorZombies.Player.Movement;
+using SurvivorZombies.Zombies;
 using UnityEngine;
 
 namespace SurvivorZombies.Weapons  {
@@ -29,8 +30,11 @@ namespace SurvivorZombies.Weapons  {
             }
             
             var damagable = other.GetComponent<IDamagable>();
-            damagable?.Damage(m_weaponDamage);
+            if (damagable == null) return;
+            
+            damagable.Damage(m_weaponDamage);
             Destroy(gameObject);
+
         }
     }
 }

@@ -15,3 +15,7 @@ MonoBehaviour:
   MaxHealth: 200
   Speed: 1
   Damage: 50
+  HurtSound:
+  - {fileID: 8300000, guid: cb5fd72b91f105442b8bb669d0009114, type: 3}
+  - {fileID: 8300000, guid: f78ec24e7fdecf1499fbe2eb347d3391, type: 3}
+  DeadSound: {fileID: 8300000, guid: 4d34ac6c21e3cce45bda77de62eb1999, type: 3}

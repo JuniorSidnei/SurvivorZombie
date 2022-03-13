@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using GameToBeNamed.Utils.Sound;
+using SurvivorZombies.Utils.Sound;
 using SurvivorZombies.Weapons;
 using SurvivorZombies.Weapons.Data;
 using Unity.Mathematics;
@@ -33,8 +35,9 @@ namespace SurvivorZombies.Weapons {
             var ray = Camera.main.ScreenPointToRay(centerPoint);
             if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, aimLayer)) {
                 mouseWorldPos = hit.point;
-            } 
-            
+            }
+
+            AudioController.Instance.Play(weaponData.ShootSound, AudioController.SoundType.SoundEffect2D);
             var aimDir = (mouseWorldPos - barrelSpawn.position).normalized;
             var bullet = Instantiate(weaponData.Bullet, barrelSpawn.transform.position, quaternion.LookRotation(aimDir, Vector3.up));
             bullet.GetComponent<Bullet>().SetDamage(weaponData.Damage);

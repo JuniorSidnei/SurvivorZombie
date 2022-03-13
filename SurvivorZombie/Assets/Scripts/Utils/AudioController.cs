@@ -3,11 +3,12 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using GameToBeNamed.Utils.Sound;
 using SurvivorZombies.Utils;
 using UnityEngine;
 using UnityEngine.Audio;
 
-namespace GameToBeNamed.Utils.Sound {
+namespace SurvivorZombies.Utils.Sound {
     public class AudioController : Singleton<AudioController> {
         #region Editor Attributes
 

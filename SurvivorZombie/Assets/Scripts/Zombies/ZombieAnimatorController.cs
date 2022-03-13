@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
@@ -10,22 +11,35 @@ namespace SurvivorZombies.Zombies {
         public TargetSeeker targetSeeker;
         private Animator m_animator;
         private PhotonView m_photonView;
+
+        [SerializeField] private GameObject m_zombieObject;
         
-        
-        private void Awake() {
-            m_animator = GetComponent<Animator>();
-            m_photonView = GetComponentInParent<PhotonView>();
+        private void OnEnable() {
             ZombieConstitution.onHurt += OnHurtAnimation;
             ZombieConstitution.onDeath += OnDeathAnimation;
         }
 
-        private void OnHurtAnimation() {
+        private void OnDisable() {
+            ZombieConstitution.onHurt -= OnHurtAnimation;
+            ZombieConstitution.onDeath -= OnDeathAnimation;
+        }
+
+        private void Awake() {
+            m_animator = GetComponent<Animator>();
+            m_photonView = GetComponentInParent<PhotonView>();
+        }
+
+        private void OnHurtAnimation(GameObject zombieObject) {
             if (!m_photonView.IsMine) return;
+            if (m_zombieObject != zombieObject) return;
+            
             m_animator.CrossFade("zombie_hurt", 0.2f);
         }
 
         private void OnDeathAnimation(GameObject zombieObject) {
             if (!m_photonView.IsMine) return;
+            if (m_zombieObject != zombieObject) return;
+            
             m_animator.CrossFade("zombie_dying", 0.2f);
         }
         

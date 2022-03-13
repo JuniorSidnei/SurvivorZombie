@@ -9,5 +9,6 @@ namespace SurvivorZombies.Weapons.Data {
         public GameObject Bullet;
         public int Damage;
         public float FireRate;
+        public AudioClip ShootSound;
     }
 }

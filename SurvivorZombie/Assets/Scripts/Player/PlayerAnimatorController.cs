@@ -12,15 +12,18 @@ namespace SurvivorZombies.Player.Animations {
         [SerializeField] private PlayerController m_playerController;
         private Animator m_animator;
         private PhotonView m_photonView;
-        
+        [SerializeField] private GameObject m_playerObject;
+          
         private void Awake() {
             m_animator = GetComponent<Animator>();
             m_photonView = GetComponentInParent<PhotonView>();
             PlayerController.onJump += OnPlayerJump;
         }
 
-        private void OnPlayerJump() {
+        private void OnPlayerJump(GameObject playerObject) {
             if (!m_photonView.IsMine) return;
+            if (m_playerObject != playerObject) return;
+            
             m_animator.CrossFade("pistol_jump", 0.2f);
         }
         

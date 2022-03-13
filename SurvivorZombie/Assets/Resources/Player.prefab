@@ -425,3 +425,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_playerController: {fileID: 4431174686353980926}
+  m_playerObject: {fileID: 4429290727209568048}

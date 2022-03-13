@@ -6,8 +6,8 @@ using UnityEngine.InputSystem;
 namespace SurvivorZombies.Player.Movement  {
 
     [RequireComponent(typeof(CharacterController), typeof(PlayerInput))]
-    public class PlayerController : MonoBehaviour  {
-        
+    public class PlayerController : MonoBehaviour {
+
         [SerializeField] private Weapon m_currentWeapon;
         private CharacterController m_characterController;
         private PlayerInput m_playerInput;
@@ -30,7 +30,7 @@ namespace SurvivorZombies.Player.Movement  {
 
         public bool IsGrounded => m_isGrounded;
 
-        public delegate void OnPlayerJump();
+        public delegate void OnPlayerJump(GameObject playerObject);
         public static event OnPlayerJump onJump;
         
         private void Awake()  {
@@ -83,7 +83,7 @@ namespace SurvivorZombies.Player.Movement  {
             m_characterController.Move(move * Time.deltaTime * m_playerSpeed);
 
             if (m_jumpAction.triggered && m_isGrounded) {
-                onJump?.Invoke();
+                onJump?.Invoke(gameObject);
                 m_playerVelocity.y += Mathf.Sqrt(m_jumpHeight * -3.0f * m_gravityValue);
             }
 
