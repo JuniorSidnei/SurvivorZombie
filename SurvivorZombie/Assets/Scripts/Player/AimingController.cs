@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Cinemachine;
+using SurvivorZombies.Utils;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -22,7 +23,7 @@ namespace SurvivorZombies.Player  {
         
         private void Awake() {
             m_virtualAimCamera = GetComponent<CinemachineVirtualCamera>();
-            PlayerSpawner.onPlayerSpawned += OnPlayerSpawn;
+            PlayerRoomManager.onPlayerSpawned += OnPlayerSpawn;
         }
 
         private void OnEnable() {

@@ -15,7 +15,7 @@ EditorBuildSettings:
     path: Assets/Scenes/Lobby.unity
     guid: 3c347b9704344c348a37c528c139f4bc
   - enabled: 1
-    path: Assets/Scenes/WaitingLobbyScene.unity
+    path: Assets/Scenes/StreetGameScene.unity
     guid: d1c3109bdb54ad54c8a2b2838528e640
   - enabled: 0
     path: Assets/Photon/PhotonUnityNetworking/Demos/PunBasics-Tutorial/Scenes/PunBasics-Launcher.unity
