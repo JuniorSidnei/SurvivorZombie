@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Photon.Pun;
+using ExitGames.Client.Photon;
 using Photon.Realtime;
 using TMPro;
 using UnityEngine;
@@ -11,28 +13,50 @@ using UnityEngine.UI;
 namespace SurvivorZombies.Server {
 
 
-    public class ServerManager : MonoBehaviour {
+    public class ServerManager : MonoBehaviourPunCallbacks {
 
         enum ErrorMessageType {
-            Name, RoomName
+            Name, RoomName, JoinRoomName
         }
         
         [Header("input fields")]
         public TMP_InputField PlayerNameInput;
         public TMP_InputField RoomNameInputField;
         public TMP_InputField MaxPlayersInputField;
+        public TMP_InputField JoinRoomInputField;
         
+        [Header("text fields")]
         public TextMeshProUGUI ConnectionStatusText;
         public TextMeshProUGUI NameWarningMessage;
         public TextMeshProUGUI RoomWarningMessage;
+        public TextMeshProUGUI JoinRoomWarningMessage;
 
         public List<GameObject> Panels;
+        public GameObject PlayerListEntry;
 
+        public Button StartGameButton;
+        
+        private Dictionary<int, PlayerLobbyEntry> m_playerListEntries = new Dictionary<int, PlayerLobbyEntry>();
         private readonly string connectionStatusMessage = "    Connection Status: ";
         private ErrorMessageType m_errorMessageType;
-        
+        private GameObject m_currentPanel;
+        private bool m_isConnectedToMaster;
+
+        private void Awake() {
+            PlayerLobbyEntry.onUpdateState += UpdatePlayersState;
+        }
+
         private void Update() {
             ConnectionStatusText.text = connectionStatusMessage + PhotonNetwork.NetworkClientState;
+        }
+        
+        public override void OnConnectedToMaster() {
+            ActivateCurrentPanel(m_currentPanel);
+        }
+        
+        private void UpdatePlayersState() {
+            StartGameButton.gameObject.SetActive(PhotonNetwork.IsMasterClient);
+            //StartGameButton.gameObject.SetActive(CheckPlayersReady()); 
         }
         
         public void OnLoginButtonClicked(GameObject panelToActivate) {
@@ -40,6 +64,7 @@ namespace SurvivorZombies.Server {
 
             if (!playerName.Equals("")) {
                 PhotonNetwork.LocalPlayer.NickName = playerName;
+                PhotonNetwork.AutomaticallySyncScene = true;
                 PhotonNetwork.ConnectUsingSettings();
             }
             else {
@@ -47,11 +72,11 @@ namespace SurvivorZombies.Server {
                 m_errorMessageType = ErrorMessageType.Name;
                 Invoke(nameof(HideWarningMessage), 1f);
             }
-            
-            ActivateCurrentPanel(panelToActivate);
+
+            m_currentPanel = panelToActivate;
         }
 
-        public void OnCreateRoomButtonClicked() {
+        public void OnCreateRoomButtonClicked(GameObject panelToActivate) {
             var roomName = RoomNameInputField.text;
             if (roomName == "") {
                 RoomWarningMessage.gameObject.SetActive(true);
@@ -63,15 +88,115 @@ namespace SurvivorZombies.Server {
             byte.TryParse(MaxPlayersInputField.text, out var maxPlayers);
             maxPlayers = (byte) Mathf.Clamp(maxPlayers, 2, 8);
             
-            var options = new RoomOptions {MaxPlayers = maxPlayers, PlayerTtl = 10000 };
+            var options = new RoomOptions {MaxPlayers = maxPlayers, PlayerTtl = 10000, BroadcastPropsChangeToAll = true};
 
             PhotonNetwork.CreateRoom(roomName, options, null);
-            //TODO implement joined room and instantiate players text in the room
-        }
-        
-        public void OnCancelCreateRoomPanel(GameObject panelToActivate) {
             ActivateCurrentPanel(panelToActivate);
         }
+
+        public void OnJoinRoomButtonClicked(GameObject panelToActivate) {
+            var roomName = JoinRoomInputField.text;
+            if (roomName == "") {
+                JoinRoomWarningMessage.gameObject.SetActive(true);
+                m_errorMessageType = ErrorMessageType.RoomName;
+                Invoke(nameof(HideWarningMessage), 1f);
+                return;
+            }
+
+            PhotonNetwork.JoinRoom(roomName);
+            ActivateCurrentPanel(panelToActivate);
+        }
+        
+        public override void OnJoinedRoom() {
+            UpdatePlayersList();
+            // foreach (var player in PhotonNetwork.PlayerList) {
+            //     CreatePlayerLobby(player);
+            // }
+
+            StartGameButton.gameObject.SetActive(PhotonNetwork.IsMasterClient);
+            //StartGameButton.gameObject.SetActive(CheckPlayersReady());
+        }
+        
+        public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer) {
+            UpdatePlayersList();
+        }
+
+        public override void OnPlayerLeftRoom(Photon.Realtime.Player newPlayer) {
+            UpdatePlayersList();
+        }
+        
+        public void OnStartGameButtonClicked() {
+            PhotonNetwork.CurrentRoom.IsOpen = false;
+            PhotonNetwork.CurrentRoom.IsVisible = false;
+
+            PhotonNetwork.LoadLevel("WaitingLobbyScene");
+        }
+        
+        public override void OnJoinRoomFailed(short returnCode, string message) {
+            JoinRoomWarningMessage.gameObject.SetActive(true);    
+            JoinRoomWarningMessage.text = message;
+            m_errorMessageType = ErrorMessageType.JoinRoomName;
+            Invoke(nameof(HideWarningMessage), 1f);
+        }
+        
+        public override void OnPlayerPropertiesUpdate(Photon.Realtime.Player targetPlayer, ExitGames.Client.Photon.Hashtable changedProps) {
+            if (m_playerListEntries == null) {
+                m_playerListEntries = new Dictionary<int, PlayerLobbyEntry>();
+            }
+
+            if (m_playerListEntries.TryGetValue(targetPlayer.ActorNumber, out var entry)) {
+                if (changedProps.TryGetValue(PlayerLobbyEntry.PLAYER_READY, out var isPlayerReady)) {
+                    entry.GetComponent<PlayerLobbyEntry>().SetPlayerReady((bool) isPlayerReady);
+                }
+            }
+
+            //StartGameButton.gameObject.SetActive(CheckPlayersReady());
+        }
+        
+        public void OnBackButtonClicked(GameObject panelToActivate) {
+            if (PhotonNetwork.InLobby) {
+                PhotonNetwork.LeaveLobby();
+            }
+
+            ActivateCurrentPanel(panelToActivate);
+        }
+        
+        public void OnLeaveGameButtonClicked(GameObject panelToActivate) {
+            PhotonNetwork.LeaveRoom();
+            ActivateCurrentPanel(panelToActivate);
+        }
+        
+        public void ActivateCurrentPanel(GameObject currentPanel) {
+            foreach (var panel in Panels) {
+                if (panel.name == currentPanel.name) {
+                    currentPanel.SetActive(true);
+                    m_currentPanel = currentPanel;
+                }
+                else {
+                    panel.SetActive(false);
+                }
+            }
+        }
+        
+        private bool CheckPlayersReady() {
+            if (!PhotonNetwork.IsMasterClient) {
+                return false; 
+            }
+            
+            foreach (Photon.Realtime.Player player in PhotonNetwork.PlayerList) {
+                if (player.CustomProperties.TryGetValue(PlayerLobbyEntry.PLAYER_READY, out var isPlayerReady)) {
+                    if (!(bool) isPlayerReady) {
+                        return false;
+                    }
+                }
+                else {
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+        
         
         private  void HideWarningMessage() {
             switch (m_errorMessageType) {
@@ -81,20 +206,38 @@ namespace SurvivorZombies.Server {
                 case ErrorMessageType.RoomName:
                     RoomWarningMessage.gameObject.SetActive(false);        
                     break;
+                case ErrorMessageType.JoinRoomName:
+                    JoinRoomWarningMessage.gameObject.SetActive(false);        
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(m_errorMessageType), m_errorMessageType, null);
             }
         }
 
-        private void ActivateCurrentPanel(GameObject currentPanel) {
-            foreach (var panel in Panels) {
-                if (panel.name == currentPanel.name) {
-                    currentPanel.SetActive(true);
-                }
-                else {
-                    panel.SetActive(false);
-                }
+        private void CreatePlayerLobby(Photon.Realtime.Player newPlayer) {
+            var entry = Instantiate(PlayerListEntry, m_currentPanel.transform, true);
+            entry.transform.localScale = Vector3.one;
+            var lobbyEntry = entry.GetComponent<PlayerLobbyEntry>();
+            lobbyEntry.Initialize(newPlayer.ActorNumber, newPlayer.NickName);
+            lobbyEntry.SetPlayerReady(false);
+            m_playerListEntries.Add(newPlayer.ActorNumber, lobbyEntry); 
+        }
+        
+        private void UpdatePlayersList() {
+            foreach (var player in m_playerListEntries) {
+                Destroy(player.Value.gameObject);
+            }
+            
+            m_playerListEntries.Clear();
+
+            if (PhotonNetwork.CurrentRoom == null) {
+                return; 
+            }
+
+            foreach (var player in PhotonNetwork.CurrentRoom.Players) {
+                CreatePlayerLobby(player.Value);
             }
         }
+        
     }
 }

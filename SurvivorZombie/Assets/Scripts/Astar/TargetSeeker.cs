@@ -1,13 +1,17 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Pathfinding;
+using Photon.Pun;
 using SurvivorZombies.Data;
+using SurvivorZombies.Player;
 using SurvivorZombies.Zombies;
 using UnityEngine;
 
 public class TargetSeeker : MonoBehaviour {
     public Transform targetPosition;
     public CharacterData characterData;
+    public LayerMask ObstacleLayer;
     
     private Seeker m_seeker;
     private CharacterController m_controller;
@@ -19,23 +23,33 @@ public class TargetSeeker : MonoBehaviour {
     
     private int currentWaypoint = 0;
     private bool m_isDead;
+    private Vector3 m_positionDelta;
+    private PhotonView m_photonView;
 
-    public Vector3 Velocity => m_controller.velocity;
-    
-    public void Start () {
+    public Vector3 Velocity => m_positionDelta;
+
+    public void Awake () {
         m_seeker = GetComponent<Seeker>();
         m_controller = GetComponent<CharacterController>();
+        m_photonView = GetComponent<PhotonView>();
         
-        m_seeker.StartPath(transform.position, targetPosition.position, OnPathComplete);
         ZombieConstitution.onDeath += OnDeath;
     }
 
-    private void OnDeath() {
+    private void OnDeath(GameObject zombie) {
+        if (!m_photonView.IsMine) return;
+        
         m_isDead = true;
-        Destroy(gameObject, 4.1f);
+        Invoke(nameof(OnDestroyGameobject), 4.1f);
+    }
+
+    private void OnDestroyGameobject() {
+        if (!m_photonView.IsMine) return;
+        PhotonNetwork.Destroy(gameObject);
     }
     
     private void OnPathComplete (Path p) {
+        if (!m_photonView.IsMine) return;
         Debug.Log("A path was calculated. Did it fail with an error? " + p.error);
 
         if (!p.error) {
@@ -46,10 +60,9 @@ public class TargetSeeker : MonoBehaviour {
     }
 
     public void FixedUpdate () {
-        if (path == null || m_isDead) {
+        if (path == null || m_isDead || targetPosition ==  null || !m_photonView.IsMine) {
             return;
         }
-        
         
         reachedEndOfPath = false;
         m_seeker.StartPath(transform.position, targetPosition.position, OnPathComplete);
@@ -69,11 +82,34 @@ public class TargetSeeker : MonoBehaviour {
                 break;
             }
         }
-         
+
+        var oldPos = transform.position;
         var speedFactor = reachedEndOfPath ? Mathf.Sqrt(distanceToWaypoint/nextWaypointDistance) : 1f;
         var dir = (path.vectorPath[currentWaypoint] - transform.position).normalized;
         transform.rotation = Quaternion.LookRotation(-dir, Vector3.up);
         var velocity = dir * characterData.Speed * speedFactor;
         m_controller.SimpleMove(velocity);
+        m_positionDelta = transform.position - oldPos;
+    }
+
+    public void SetTarget(Transform target) {
+        if (!m_photonView.IsMine) return;
+        targetPosition = target;
+        m_seeker.StartPath(transform.position, targetPosition.position, OnPathComplete);
+    }
+    
+    private void OnTriggerEnter(Collider other) {
+        if (!m_photonView.IsMine) return;
+        
+        if(((1 << other.gameObject.layer) & ObstacleLayer) == 0) {
+            return;
+        }
+        
+        if (targetPosition) {
+            return;
+        }
+
+        targetPosition = other.transform;
+        m_seeker.StartPath(transform.position, targetPosition.position, OnPathComplete);
     }
 }

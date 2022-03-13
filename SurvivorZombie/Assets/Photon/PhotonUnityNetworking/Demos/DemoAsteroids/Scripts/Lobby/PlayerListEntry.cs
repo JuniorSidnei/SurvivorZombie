@@ -26,9 +26,6 @@ namespace Photon.Pun.Demo.Asteroids
         public Button PlayerReadyButton;
         public Image PlayerReadyImage;
 
-        public Color ReadyColor;
-        public Color NotReadyColor;
-
         private int ownerId;
         private bool isPlayerReady;
 
@@ -39,8 +36,7 @@ namespace Photon.Pun.Demo.Asteroids
             PlayerNumbering.OnPlayerNumberingChanged += OnPlayerNumberingChanged;
         }
 
-        public void Start()
-        {
+        public void Start() {
             if (PhotonNetwork.LocalPlayer.ActorNumber != ownerId)
             {
                 PlayerReadyButton.gameObject.SetActive(false);

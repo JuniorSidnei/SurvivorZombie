@@ -13,18 +13,21 @@ namespace SurvivorZombies.Player  {
         public Image crossHair;
         [SerializeField] private PlayerInput m_playerInput;
         private CinemachineVirtualCamera m_virtualAimCamera;
+        [SerializeField] private CinemachineVirtualCamera m_virtualCamera;
 
         private InputAction m_aimAction;
 
         private int m_priorityBoost = 15;
-
+        private Transform m_characterTransform;
+        
         private void Awake() {
             m_virtualAimCamera = GetComponent<CinemachineVirtualCamera>();
-            m_aimAction = m_playerInput.actions["Aim"];
-            
+            PlayerSpawner.onPlayerSpawned += OnPlayerSpawn;
         }
 
         private void OnEnable() {
+            if (m_aimAction == null) return;
+            
             m_aimAction.performed += _ => Aiming(true);
             m_aimAction.canceled += _ => Aiming(false);
         }
@@ -34,6 +37,18 @@ namespace SurvivorZombies.Player  {
             m_aimAction.canceled -= _ => Aiming(false);
         }
 
+        private void OnPlayerSpawn() {
+            m_characterTransform = FindObjectOfType<PlayerInput>().transform;
+            if (!m_characterTransform) return;
+            
+            m_playerInput = m_characterTransform.GetComponent<PlayerInput>();
+            m_virtualAimCamera.Follow = m_characterTransform;
+            m_virtualAimCamera.LookAt = m_characterTransform;
+            m_virtualCamera.Follow = m_characterTransform;
+            m_virtualCamera.LookAt = m_characterTransform;
+            m_aimAction = m_playerInput.actions["Aim"];
+        }
+        
         private void Aiming(bool isAiming)  {
             if (isAiming) {
                 m_virtualAimCamera.Priority += m_priorityBoost;

@@ -9,6 +9,7 @@ namespace SurvivorZombies.Weapons  {
     public class Bullet : MonoBehaviour {
 
         [SerializeField] private float m_speed;
+        public LayerMask ObstacleLayer;
         private Rigidbody m_rigidbody;
         private float m_weaponDamage;
         
@@ -23,6 +24,10 @@ namespace SurvivorZombies.Weapons  {
         }
         
         private void OnTriggerEnter(Collider other)  {
+            if(((1 << other.gameObject.layer) & ObstacleLayer) == 0) {
+                return;
+            }
+            
             var damagable = other.GetComponent<IDamagable>();
             damagable?.Damage(m_weaponDamage);
             Destroy(gameObject);

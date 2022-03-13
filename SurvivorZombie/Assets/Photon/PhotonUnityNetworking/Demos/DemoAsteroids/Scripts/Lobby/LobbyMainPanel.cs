@@ -258,7 +258,7 @@ namespace Photon.Pun.Demo.Asteroids
         {
             if (!PhotonNetwork.IsMasterClient)
             {
-                return false;
+                return false; 
             }
 
             foreach (Player p in PhotonNetwork.PlayerList)
