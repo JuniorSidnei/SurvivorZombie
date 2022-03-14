@@ -154,7 +154,7 @@ namespace SurvivorZombies.Server {
             PhotonNetwork.CurrentRoom.IsOpen = false;
             PhotonNetwork.CurrentRoom.IsVisible = false;
             AudioController.Instance.Play(ClickButton, AudioController.SoundType.SoundEffect2D, 0.4f);
-            PhotonNetwork.LoadLevel("WaitingLobbyScene");
+            PhotonNetwork.LoadLevel("StreetGameScene");
         }
         
         public override void OnJoinRoomFailed(short returnCode, string message) {

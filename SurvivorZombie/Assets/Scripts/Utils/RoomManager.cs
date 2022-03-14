@@ -18,6 +18,8 @@ namespace SurvivorZombies.Utils {
         
         private void Start() {
             m_photonView = GetComponent<PhotonView>();
+            m_playerRoomManager = GetComponent<PlayerRoomManager>();
+            m_zombieRoomManager = GetComponent<ZombiesRoomManager>();
             if (!m_photonView.IsMine) return;
             m_photonView.RPC(nameof(m_playerRoomManager.CreatePlayer), RpcTarget.All);
             m_zombieRoomManager.SetTargets(m_playerRoomManager.Players);

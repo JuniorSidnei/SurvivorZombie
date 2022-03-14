@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
 using SurvivorZombies.Data;
+using SurvivorZombies.Utils;
 using SurvivorZombies.Utils.Sound;
 using UnityEngine;
 using UnityEngine.UI;
@@ -62,6 +63,7 @@ namespace SurvivorZombies.Zombies {
             if (!(m_currentHealth <= 0)) return;
             
             AudioController.Instance.Play(characterData.DeadSound, AudioController.SoundType.SoundEffect2D, 0.2f);
+            GameManager.Instance.UpdateScore();
             m_currentHealth = 0;
             healthCanvas.SetActive(false);
             Destroy(this);

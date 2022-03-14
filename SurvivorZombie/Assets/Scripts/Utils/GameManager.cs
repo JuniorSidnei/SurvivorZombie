@@ -11,6 +11,7 @@ namespace SurvivorZombies.Utils {
         
         public TextMeshProUGUI BestTextScore;
         public TextMeshProUGUI CurrentScore;
+        public WaveManager WaveManager;
         
         private PhotonView m_photonView;
         private int m_bestScore;
@@ -18,7 +19,10 @@ namespace SurvivorZombies.Utils {
         private readonly string m_bestScoreName = "BestScore";
 
         private void OnDisable() {
-            PlayerPrefs.SetInt(m_bestScoreName, m_currentScore);
+            m_bestScore = PlayerPrefs.GetInt(m_bestScoreName) < m_currentScore ? m_currentScore : PlayerPrefs.GetInt(m_bestScoreName);
+            
+            PlayerPrefs.SetInt(m_bestScoreName, m_bestScore);
+            PlayerPrefs.Save();
         }
 
         private void Awake() {
@@ -33,9 +37,10 @@ namespace SurvivorZombies.Utils {
             CurrentScore.text = "Current Score: " + m_currentScore;
         }
     
-        public void UpdateGlobalScore() {
+        public void UpdateScore() {
             m_currentScore ++;
             CurrentScore.text = "Current Score: " + m_currentScore;
+            WaveManager.ObjectsToFinishWave--;
         }
     }
 }
