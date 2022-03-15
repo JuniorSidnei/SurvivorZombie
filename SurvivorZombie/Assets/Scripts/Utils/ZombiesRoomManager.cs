@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Photon.Pun;
+using SurvivorZombies.Player.Movement;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -12,12 +13,7 @@ namespace SurvivorZombies.Utils {
         public List<GameObject> Zombies;
         public LayerMask ObstacleLayer;
         public List<Transform> zombiesSpawns;
-        private List<Transform> m_targetList = new List<Transform>();
-        
-        public void SetTargets(List<Transform> targets) {
-            m_targetList = targets;
-        }
-        
+
         [PunRPC]
         public void CreateZombie() {
             var random = Random.Range(0, zombiesSpawns.Count);
@@ -27,8 +23,10 @@ namespace SurvivorZombies.Utils {
             
             var randomZombie = Random.Range(0, Zombies.Count - 1);
             var zombie = PhotonNetwork.InstantiateRoomObject(Zombies[randomZombie].name, zombiesSpawns[random].position, Quaternion.identity);
-            var randomTarget = Random.Range(0, m_targetList.Count - 1);
-            zombie.GetComponent<ZombieController>().SetTarget(m_targetList[randomTarget]);
+            var allPlayers = FindObjectsOfType<PlayerController>();
+            var randomTarget = Random.Range(0, allPlayers.Length - 1);
+            if (zombie == null) return;
+            zombie.GetComponent<ZombieController>().SetTarget(allPlayers[randomTarget].transform);
         }
     }
 }

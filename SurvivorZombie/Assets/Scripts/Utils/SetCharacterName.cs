@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace SurvivorZombies.Utils {
     
-    public class SetCharacterName : MonoBehaviourPun {
+    public class SetCharacterName : MonoBehaviourPun, IPunObservable {
         public TextMeshProUGUI NameText;
         
         private void Start() {
@@ -14,7 +14,14 @@ namespace SurvivorZombies.Utils {
 
             NameText.text = photonView.Owner.NickName;
         }
-
         
+        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
+            if (stream.IsWriting) {
+                stream.SendNext(NameText.text);
+            }
+            else {
+                NameText.text = (string) stream.ReceiveNext();
+            }
+        }
     }
 }

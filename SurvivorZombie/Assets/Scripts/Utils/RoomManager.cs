@@ -1,13 +1,6 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
 using Photon.Pun;
 using Photon.Realtime;
-using SurvivorZombies.Server;
-using TMPro;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 namespace SurvivorZombies.Utils {
@@ -20,12 +13,12 @@ namespace SurvivorZombies.Utils {
         private PhotonView m_photonView;
         
         private void Start() {
+            Cursor.lockState = CursorLockMode.Locked;
             m_photonView = GetComponent<PhotonView>();
             m_playerRoomManager = GetComponent<PlayerRoomManager>();
             m_zombieRoomManager = GetComponent<ZombiesRoomManager>();
             if (!m_photonView.IsMine || !PhotonNetwork.IsMasterClient) return;
             m_photonView.RPC(nameof(m_playerRoomManager.CreatePlayer), RpcTarget.All);
-            m_zombieRoomManager.SetTargets(m_playerRoomManager.Players);
         }
 
         private void Update() {

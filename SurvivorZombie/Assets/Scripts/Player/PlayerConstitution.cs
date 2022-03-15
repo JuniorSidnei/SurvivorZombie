@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using SurvivorZombies.Player.Animations;
 using SurvivorZombies.Utils;
 using SurvivorZombies.Utils.Sound;
@@ -7,7 +8,7 @@ using UnityEngine;
 
 namespace SurvivorZombies.Player {
 
-    public class PlayerConstitution : CharacterConstitution, IDamagable {
+    public class PlayerConstitution : CharacterConstitution, IDamagable, IPunObservable {
         public PlayerAnimatorController PlayerAnimator;
         
         public delegate void OnCharacterDeath(GameObject playerObject);
@@ -33,6 +34,15 @@ namespace SurvivorZombies.Player {
             onCharacterDeath?.Invoke(gameObject);
             GameManager.Instance.EndGame();
             PlayerAnimator.OnDeathAnimation();
+        }
+        
+        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
+            if (stream.IsWriting) {
+                stream.SendNext(CurrentHealth);
+            }
+            else {
+                CurrentHealth = (float) stream.ReceiveNext();
+            }
         }
     }
 }

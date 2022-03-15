@@ -33,7 +33,6 @@ namespace SurvivorZombies.Server {
         public TextMeshProUGUI NameWarningMessage;
         public TextMeshProUGUI RoomWarningMessage;
         public TextMeshProUGUI JoinRoomWarningMessage;
-        public TextMeshProUGUI BestScore;
 
         public List<GameObject> Panels;
         public GameObject PlayerListEntry;
@@ -61,12 +60,6 @@ namespace SurvivorZombies.Server {
         }
         
         private void Start() {
-            if (PlayerPrefs.HasKey(m_bestScoreName)) {
-                BestScore.text = "Best current score: " + PlayerPrefs.GetInt(m_bestScoreName);
-            }
-            else {
-                BestScore.text = "Don't have any score yet!";
-            }
             AudioController.Instance.Play(LobbyMusic, AudioController.SoundType.Music, 0.1f, true);
         }
 
@@ -261,5 +254,6 @@ namespace SurvivorZombies.Server {
                 CreatePlayerLobby(player.Value);
             }
         }
+        
     }
 }

@@ -11,6 +11,7 @@ namespace SurvivorZombies.Utils
     {
         public GameObject Player;
         public Transform spawnTransform;
+        private GameObject m_playeravatar;
         
         public delegate void OnPlayerSpawned();
         public static event OnPlayerSpawned onPlayerSpawned;
@@ -21,9 +22,9 @@ namespace SurvivorZombies.Utils
 
         [PunRPC]
         public void CreatePlayer() {
-            var player = PhotonNetwork.Instantiate(Player.name, spawnTransform.position, Quaternion.identity);
+            m_playeravatar = PhotonNetwork.Instantiate(Player.name, spawnTransform.position, Quaternion.identity);
+            m_players.Add(m_playeravatar.transform);
             onPlayerSpawned?.Invoke();
-            m_players.Add(player.transform);
         }
     }
 }

@@ -8,7 +8,7 @@ using UnityEngine.UI;
 
 namespace SurvivorZombies.Utils {
     
-    public class CharacterConstitution : MonoBehaviour, IPunObservable {
+    public class CharacterConstitution : MonoBehaviour {
 
         public CharacterData characterData;
         public Image health;
@@ -26,19 +26,6 @@ namespace SurvivorZombies.Utils {
         private void Awake() {
             m_photonView = GetComponent<PhotonView>();
             m_currentHealth = characterData.MaxHealth;
-        }
-        
-        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
-            if (stream.IsWriting) {
-                stream.SendNext(m_currentHealth);
-                if (health == null) return;
-                stream.SendNext(health.fillAmount);
-            }
-            else {
-                m_currentHealth = (float) stream.ReceiveNext();
-                if (health == null) return;
-                health.fillAmount = (float) stream.ReceiveNext();
-            }
         }
     }
 }

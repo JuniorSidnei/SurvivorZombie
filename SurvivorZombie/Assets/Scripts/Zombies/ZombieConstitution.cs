@@ -1,18 +1,14 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using Photon.Pun;
-using SurvivorZombies.Data;
 using SurvivorZombies.Utils;
 using SurvivorZombies.Utils.Sound;
 using UnityEngine;
-using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 namespace SurvivorZombies.Zombies {
 
-    public class ZombieConstitution : CharacterConstitution, IDamagable {
+    public class ZombieConstitution : CharacterConstitution, IDamagable, IPunObservable {
         public List<AudioClip> GroamsSounds;
         public AudioClip HitSound;
         public ZombieAnimatorController ZombieAnimator;
@@ -56,5 +52,17 @@ namespace SurvivorZombies.Zombies {
             Destroy(this);
             ZombieAnimator.OnDeathAnimation();
         }
+        
+        public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
+            if (stream.IsWriting) {
+                stream.SendNext(CurrentHealth);
+                stream.SendNext(health.fillAmount);
+            }
+            else {
+                CurrentHealth = (float) stream.ReceiveNext();
+                health.fillAmount = (float) stream.ReceiveNext();
+            }
+        }
+        
     }
 }
