@@ -128,17 +128,12 @@ namespace SurvivorZombies.Server {
             }
             AudioController.Instance.Play(ClickButton, AudioController.SoundType.SoundEffect2D, 0.4f);
             PhotonNetwork.JoinRoom(roomName);
-            ActivateCurrentPanel(panelToActivate);
         }
         
         public override void OnJoinedRoom() {
-            UpdatePlayersList();
-            // foreach (var player in PhotonNetwork.PlayerList) {
-            //     CreatePlayerLobby(player);
-            // }
-
+            ActivateCurrentPanel(Panels[3]);
             StartGameButton.gameObject.SetActive(PhotonNetwork.IsMasterClient);
-            //StartGameButton.gameObject.SetActive(CheckPlayersReady());
+            UpdatePlayersList();
         }
         
         public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer) {
@@ -158,8 +153,7 @@ namespace SurvivorZombies.Server {
         }
         
         public override void OnJoinRoomFailed(short returnCode, string message) {
-            JoinRoomWarningMessage.gameObject.SetActive(true);    
-            JoinRoomWarningMessage.text = message;
+            JoinRoomWarningMessage.gameObject.SetActive(true);
             m_errorMessageType = ErrorMessageType.JoinRoomName;
             Invoke(nameof(HideWarningMessage), 1f);
         }
@@ -235,7 +229,8 @@ namespace SurvivorZombies.Server {
                     RoomWarningMessage.gameObject.SetActive(false);        
                     break;
                 case ErrorMessageType.JoinRoomName:
-                    JoinRoomWarningMessage.gameObject.SetActive(false);        
+                    JoinRoomWarningMessage.gameObject.SetActive(false);
+                    ActivateCurrentPanel(Panels[1]);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(m_errorMessageType), m_errorMessageType, null);
