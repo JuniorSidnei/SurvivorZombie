@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using Photon.Pun;
+using Photon.Realtime;
 using SurvivorZombies.Server;
 using TMPro;
 using UnityEngine;
@@ -39,6 +40,14 @@ namespace SurvivorZombies.Utils {
             m_photonView.RPC("RPC_ReloadScene", RpcTarget.All);RPC_ReloadScene();
         }
 
+        public override void OnDisconnected(DisconnectCause cause) {
+            SceneManager.LoadScene("SplashScreen");
+        }
+
+        public override void OnLeftRoom() {
+            PhotonNetwork.Disconnect();
+        }
+        
         [PunRPC]
         private void RPC_ReloadScene() {
             if (!m_photonView.IsMine || !PhotonNetwork.IsMasterClient) return;

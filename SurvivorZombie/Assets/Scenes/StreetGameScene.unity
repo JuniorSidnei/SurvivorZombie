@@ -19782,7 +19782,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55607f778d9f5ad4ab6683113b7e5ed6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Zombie: {fileID: 5540489989573368518, guid: 2ce7a16dc181180428dc8c772e306a5c, type: 3}
+  Zombies:
+  - {fileID: 581114893819192248, guid: 7fdc0fe7f2f334d49b49275363151a5b, type: 3}
+  - {fileID: 2428195932643824762, guid: bdd8774bd8540d54eac1e5179f042668, type: 3}
+  - {fileID: 5211215786041534061, guid: 2ef53a100bc262446a85ebcaf2d7e70c, type: 3}
+  - {fileID: 1892388976895607906, guid: dc7c0f68756cf4a409d2044651e8450b, type: 3}
+  - {fileID: 6819072102881030387, guid: feffd0b7aaefc30459a31419388a36f8, type: 3}
+  - {fileID: 8574980195985235009, guid: 90521cddcdc49fd4997f89c36bbed2f9, type: 3}
+  - {fileID: 2449594143016288714, guid: 5ead41cb60a2a564eb0fc712e91ec087, type: 3}
+  - {fileID: 5096792798627612871, guid: 3aedde032db5cd04d931dd1b76f9f7ad, type: 3}
+  - {fileID: 5016278816807830426, guid: 47771400eef6a2740845d0c0316ae32c, type: 3}
+  - {fileID: 1884393424864328798, guid: 2e98e75f88038084cb57dc33dde86352, type: 3}
+  - {fileID: 635653733521401937, guid: 5abde5a0f3559bb4fac4e355606a75cf, type: 3}
+  - {fileID: 964073691069557824, guid: 61720cccff301b040959618a5e38b904, type: 3}
+  - {fileID: 2262072373252149609, guid: 0a32c7ace697ed14685996ddfe0893d2, type: 3}
+  - {fileID: 5659236173144389618, guid: 3cb6e90a4a9c524489d56d0b769dba19, type: 3}
+  - {fileID: 3062621713712057284, guid: 4199bd2df9ce7104cbdbb75d5de4800e, type: 3}
+  - {fileID: 1109673109267044137, guid: d000c606df924bb4081fb28bc8a0679b, type: 3}
+  - {fileID: 4159985016072631569, guid: 57c95777d1ca21b41b8f77f512a720c5, type: 3}
+  - {fileID: 4214625081743067298, guid: 38ebf3ecb7a25014ba80a6adae3d8ac1, type: 3}
+  - {fileID: 8504993224098404534, guid: 1102bc2a03bcc4d4ca41c1bcd1ea9497, type: 3}
+  - {fileID: 5934314432097983739, guid: bada355b345cd504c8c297a9a1d1cf7b, type: 3}
+  - {fileID: 7057997056359902873, guid: fef7588a3e5857848b94050d6aa639cb, type: 3}
+  - {fileID: 2804136423476889698, guid: af71c7dc2d6e3124cafc34eeeeb20618, type: 3}
+  - {fileID: 146740566827465202, guid: c7db626f958065848bef5324f102ce2e, type: 3}
+  - {fileID: 4969611750983456734, guid: e92df07524af7914eb1bb1bfed2c99ff, type: 3}
+  - {fileID: 2306061295343792712, guid: 7cfa51360030dc44d854ac39f2bf275f, type: 3}
+  - {fileID: 51564004358351656, guid: db17f9f612c50744c916f151488803e9, type: 3}
   ObstacleLayer:
     serializedVersion: 2
     m_Bits: 72

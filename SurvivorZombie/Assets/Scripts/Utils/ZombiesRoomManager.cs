@@ -9,7 +9,7 @@ namespace SurvivorZombies.Utils {
     
     public class ZombiesRoomManager : MonoBehaviour
     {
-        public GameObject Zombie;
+        public List<GameObject> Zombies;
         public LayerMask ObstacleLayer;
         public List<Transform> zombiesSpawns;
         private List<Transform> m_targetList = new List<Transform>();
@@ -25,7 +25,8 @@ namespace SurvivorZombies.Utils {
                 return;
             }
             
-            var zombie = PhotonNetwork.InstantiateRoomObject(Zombie.name, zombiesSpawns[random].position, Quaternion.identity);
+            var randomZombie = Random.Range(0, Zombies.Count - 1);
+            var zombie = PhotonNetwork.InstantiateRoomObject(Zombies[randomZombie].name, zombiesSpawns[random].position, Quaternion.identity);
             var randomTarget = Random.Range(0, m_targetList.Count - 1);
             zombie.GetComponent<ZombieController>().SetTarget(m_targetList[randomTarget]);
         }

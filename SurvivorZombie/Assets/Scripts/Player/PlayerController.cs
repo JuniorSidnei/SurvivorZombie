@@ -78,8 +78,7 @@ namespace SurvivorZombies.Player.Movement  {
             if (m_isDead) return;
             
             if (m_isShooting) {
-                m_photonView.RPC(nameof(m_currentWeapon.Shoot), RpcTarget.All);
-                //m_currentWeapon.Shoot();
+                m_currentWeapon.Shoot();
             }
 
             m_isGrounded = m_characterController.isGrounded;
