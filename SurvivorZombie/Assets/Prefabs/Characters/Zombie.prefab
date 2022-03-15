@@ -94,6 +94,7 @@ GameObject:
   - component: {fileID: 189772353}
   - component: {fileID: 8320940302141385278}
   - component: {fileID: 2125064172769325119}
+  - component: {fileID: -1093188827407229387}
   m_Layer: 0
   m_Name: Zombie
   m_TagString: Untagged
@@ -300,6 +301,8 @@ MonoBehaviour:
   characterData: {fileID: 11400000, guid: aff10dd8518d9bb44bace406d3ebb515, type: 2}
   health: {fileID: 9029383751689143653}
   healthCanvas: {fileID: 4730550788957094003}
+  GroamsSounds: []
+  HitSound: {fileID: 0}
 --- !u!135 &189772353
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -332,6 +335,8 @@ MonoBehaviour:
   OwnershipTransfer: 0
   observableSearch: 2
   ObservedComponents:
+  - {fileID: 1567149191}
+  - {fileID: 3349878404663260619}
   - {fileID: 2125064172769325119}
   - {fileID: 7681453065166183897}
   sceneViewId: 0
@@ -370,6 +375,22 @@ MonoBehaviour:
     InterpolateOption: 0
     InterpolateMoveTowardsSpeed: 1
     InterpolateLerpSpeed: 0
+--- !u!114 &-1093188827407229387
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3349878405286623560}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76311647d8add1744836a7770d29877b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CharacterData: {fileID: 11400000, guid: aff10dd8518d9bb44bace406d3ebb515, type: 2}
+  TargetLayer:
+    serializedVersion: 2
+    m_Bits: 8
 --- !u!1 &3537674117076795732
 GameObject:
   m_ObjectHideFlags: 0
@@ -780,6 +801,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetSeeker: {fileID: 3349878405286623564}
+  m_zombieObject: {fileID: 0}
 --- !u!114 &7681453065166183897
 MonoBehaviour:
   m_ObjectHideFlags: 0

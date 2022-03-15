@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using GameToBeNamed.Utils.Sound;
+using Photon.Pun;
 using SurvivorZombies.Utils.Sound;
 using SurvivorZombies.Weapons;
 using SurvivorZombies.Weapons.Data;
@@ -15,6 +16,7 @@ namespace SurvivorZombies.Weapons {
         public Transform barrelSpawn;
         public Transform player;
         public LayerMask aimLayer;
+        public PhotonView PhotonView;
         
         
         private float m_fireRate;
@@ -27,7 +29,9 @@ namespace SurvivorZombies.Weapons {
             m_fireRate -= Time.deltaTime;
             if (m_fireRate <= 0) m_fireRate = 0;
         }
+        
 
+        [PunRPC]
         public void Shoot() {
             if (m_fireRate > 0) return;
             var mouseWorldPos = Vector3.zero;

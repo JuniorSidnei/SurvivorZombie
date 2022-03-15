@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 4431174686353980925}
   - component: {fileID: 3841466484426074856}
   - component: {fileID: 8974112806620377551}
+  - component: {fileID: 4090051222654986167}
   m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
@@ -67,6 +68,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_currentWeapon: {fileID: 469000023706054883}
+  CharacterData: {fileID: 11400000, guid: f886a7828cda14948a9b3bc4314b6080, type: 2}
 --- !u!114 &4431174686353980925
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -117,6 +119,7 @@ MonoBehaviour:
   observableSearch: 2
   ObservedComponents:
   - {fileID: 8974112806620377551}
+  - {fileID: 4090051222654986167}
   - {fileID: 3138194769910387623}
   sceneViewId: 0
   InstantiationId: 0
@@ -154,6 +157,22 @@ MonoBehaviour:
     InterpolateOption: 0
     InterpolateMoveTowardsSpeed: 1
     InterpolateLerpSpeed: 0
+--- !u!114 &4090051222654986167
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4429290727209568048}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0561ed51237618b4192f260d5433659c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  characterData: {fileID: 11400000, guid: f886a7828cda14948a9b3bc4314b6080, type: 2}
+  health: {fileID: 0}
+  healthCanvas: {fileID: 0}
+  PlayerAnimator: {fileID: 8431368099791960183}
 --- !u!1001 &2359588291133875475
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -183,7 +202,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6333930198776550384, guid: 5b0fe5156b448734ba47c7985767d6b2, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.831
+      value: -0.607
       objectReference: {fileID: 0}
     - target: {fileID: 6333930198776550384, guid: 5b0fe5156b448734ba47c7985767d6b2, type: 3}
       propertyPath: m_LocalPosition.y

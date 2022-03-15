@@ -12,5 +12,6 @@ namespace SurvivorZombies.Data {
         public float Damage;
         public List<AudioClip> HurtSound;
         public AudioClip DeadSound;
+        public AudioClip HitSound;
     }
 }

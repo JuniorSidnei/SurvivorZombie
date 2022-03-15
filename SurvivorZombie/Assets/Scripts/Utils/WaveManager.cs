@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using SurvivorZombies.Player;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -23,11 +24,24 @@ namespace SurvivorZombies.Utils
         private int m_waveNumber = 0;
         private bool m_waveCountdownFinished;
         private bool waitingToFinishWave;
+        private bool m_isCharacterDead;
 
         public bool CanSpawn { get; set; }
 
         public int ObjectsToFinishWave { get; set; }
 
+        private void OnEnable() {
+            PlayerConstitution.onCharacterDeath += OnCharacterDeath;
+        }
+
+        private void OnDisable() {
+            PlayerConstitution.onCharacterDeath += OnCharacterDeath;
+        }
+
+        private void OnCharacterDeath(GameObject playerObject) {
+            m_isCharacterDead = true;
+        }
+        
         private void Start() {
             m_spawnTimer = SpawnTimer;
             m_timeBetweenWaves = TimeBetweenWaves;
@@ -35,6 +49,8 @@ namespace SurvivorZombies.Utils
         }
 
         private void Update() {
+            if (m_isCharacterDead) return;
+            
             if (m_waveNumber > MaxWaveNumber) {
                 ShowWaveText("You survived to all waves!");
                 return;
@@ -58,7 +74,7 @@ namespace SurvivorZombies.Utils
                     m_spawnTimer = SpawnTimer;
                     m_spawnedObjectsInWave++;
 
-                    if (m_spawnedObjectsInWave > MaxSpawnedObjectAtSameTime) {
+                    if (m_spawnedObjectsInWave >= MaxSpawnedObjectAtSameTime) {
                         waitingToFinishWave = true;
                     }
                 }

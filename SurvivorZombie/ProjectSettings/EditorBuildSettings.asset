@@ -12,6 +12,9 @@ EditorBuildSettings:
     path: Assets/Photon/PhotonUnityNetworking/Demos/DemoAsteroids/Scenes/DemoAsteroids-GameScene.unity
     guid: 98efc37d6307844488eb3e4247dde7e9
   - enabled: 1
+    path: Assets/Scenes/SplashScreen.unity
+    guid: 034091de0300d6744b5a02de6d73855c
+  - enabled: 1
     path: Assets/Scenes/Lobby.unity
     guid: 3c347b9704344c348a37c528c139f4bc
   - enabled: 1

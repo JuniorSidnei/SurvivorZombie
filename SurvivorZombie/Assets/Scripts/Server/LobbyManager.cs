@@ -67,7 +67,7 @@ namespace SurvivorZombies.Server {
             else {
                 BestScore.text = "Don't have any score yet!";
             }
-            AudioController.Instance.Play(LobbyMusic, AudioController.SoundType.Music, 0.2f, true);
+            AudioController.Instance.Play(LobbyMusic, AudioController.SoundType.Music, 0.1f, true);
         }
 
         private void Update() {

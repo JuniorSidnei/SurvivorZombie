@@ -26,16 +26,10 @@ namespace SurvivorZombies.Player  {
             PlayerRoomManager.onPlayerSpawned += OnPlayerSpawn;
         }
 
-        private void OnEnable() {
-            if (m_aimAction == null) return;
-            
-            m_aimAction.performed += _ => Aiming(true);
-            m_aimAction.canceled += _ => Aiming(false);
-        }
-
         private void OnDisable() {
             m_aimAction.performed -= _ => Aiming(false);
             m_aimAction.canceled -= _ => Aiming(false);
+            PlayerRoomManager.onPlayerSpawned -= OnPlayerSpawn;
         }
 
         private void OnPlayerSpawn() {
@@ -48,6 +42,8 @@ namespace SurvivorZombies.Player  {
             m_virtualCamera.Follow = m_characterTransform;
             m_virtualCamera.LookAt = m_characterTransform;
             m_aimAction = m_playerInput.actions["Aim"];
+            m_aimAction.performed += _ => Aiming(true);
+            m_aimAction.canceled += _ => Aiming(false);
         }
         
         private void Aiming(bool isAiming)  {

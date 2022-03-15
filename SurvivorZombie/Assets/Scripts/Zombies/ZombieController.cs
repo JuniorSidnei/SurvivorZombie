@@ -8,10 +8,11 @@ using SurvivorZombies.Player;
 using SurvivorZombies.Zombies;
 using UnityEngine;
 
-public class TargetSeeker : MonoBehaviour {
+public class ZombieController : MonoBehaviour {
     public Transform targetPosition;
     public CharacterData characterData;
     public LayerMask ObstacleLayer;
+    public ZombieAnimatorController ZombieAnimator;
     
     private Seeker m_seeker;
     private CharacterController m_controller;
@@ -25,31 +26,42 @@ public class TargetSeeker : MonoBehaviour {
     private bool m_isDead;
     private Vector3 m_positionDelta;
     private PhotonView m_photonView;
-
+    private bool m_isAttacking;
+    private SphereCollider m_triggerCollider;
     public Vector3 Velocity => m_positionDelta;
 
     private void OnEnable() {
-        ZombieConstitution.onDeath += OnDeath;
+        ZombieAnimatorController.onDeath += OnDeath;
+        ZombieAnimatorController.onFinishAttack += OnFinishedAttack;
     }
 
     private void OnDisable() {
-        ZombieConstitution.onDeath -= OnDeath;
+        ZombieAnimatorController.onDeath -= OnDeath;
+        ZombieAnimatorController.onFinishAttack -= OnFinishedAttack;
     }
 
     public void Awake () {
         m_seeker = GetComponent<Seeker>();
         m_controller = GetComponent<CharacterController>();
         m_photonView = GetComponent<PhotonView>();
+        m_triggerCollider = GetComponent<SphereCollider>();
     }
 
-    private void OnDeath(GameObject zombie) {
+    private void OnDeath(ZombieController zombieController) {
         if (!m_photonView.IsMine) return;
-        if (zombie != gameObject) return;
+        if (zombieController != this) return;
         
         m_isDead = true;
         Invoke(nameof(OnDestroyGameobject), 3.1f);
     }
 
+    private void OnFinishedAttack(GameObject zombie) {
+        if (!m_photonView.IsMine) return;
+        if (gameObject != zombie) return;
+        m_isAttacking = false;
+        m_triggerCollider.enabled = true;
+    }
+    
     private void OnDestroyGameobject() {
         if (!m_photonView.IsMine) return;
         PhotonNetwork.Destroy(gameObject);
@@ -111,12 +123,12 @@ public class TargetSeeker : MonoBehaviour {
         if(((1 << other.gameObject.layer) & ObstacleLayer) == 0) {
             return;
         }
-        
-        if (targetPosition) {
-            return;
-        }
 
-        targetPosition = other.transform;
-        m_seeker.StartPath(transform.position, targetPosition.position, OnPathComplete);
+        if (m_isAttacking) return;
+        
+        ZombieAnimator.OnAttackAnimation();
+        m_isAttacking = true;
+        m_triggerCollider.enabled = false;
+        other.GetComponent<IDamagable>().Damage(characterData.Damage);
     }
 }

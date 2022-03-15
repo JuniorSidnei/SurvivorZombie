@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c0b5c766ff1b6e438abfe5cd0c53f6c, type: 3}
+  m_Name: PlayerData
+  m_EditorClassIdentifier: 
+  MaxHealth: 500
+  Speed: 10
+  Damage: 0
+  HurtSound:
+  - {fileID: 8300000, guid: 6c99d14e93e637d48827b3c353e4d67f, type: 3}
+  - {fileID: 8300000, guid: 4f7c79f1b084ba74683c7c343e833622, type: 3}
+  DeadSound: {fileID: 8300000, guid: 6c99d14e93e637d48827b3c353e4d67f, type: 3}
+  HitSound: {fileID: 8300000, guid: 185f095c6727c884cb6777f77d238dd1, type: 3}

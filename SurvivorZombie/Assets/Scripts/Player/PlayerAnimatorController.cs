@@ -26,6 +26,18 @@ namespace SurvivorZombies.Player.Animations {
             
             m_animator.CrossFade("pistol_jump", 0.2f);
         }
+
+        public void OnHurtAnimation() {
+            if (!m_photonView.IsMine) return;
+            
+            m_animator.CrossFade("player_hit", 0.2f);
+        }
+        
+        public void OnDeathAnimation() {
+            if (!m_photonView.IsMine) return;
+            
+            m_animator.CrossFade("player_die", 0.2f);
+        }
         
         private void FixedUpdate() {
             if (!m_photonView.IsMine) return;

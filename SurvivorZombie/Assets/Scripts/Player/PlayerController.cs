@@ -1,4 +1,5 @@
 using Photon.Pun;
+using SurvivorZombies.Data;
 using SurvivorZombies.Weapons;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -9,16 +10,17 @@ namespace SurvivorZombies.Player.Movement  {
     public class PlayerController : MonoBehaviour {
 
         [SerializeField] private Weapon m_currentWeapon;
+        public CharacterData CharacterData;
         private CharacterController m_characterController;
         private PlayerInput m_playerInput;
         private Vector3 m_playerVelocity;
         private Vector3 m_velocityDelta;
         private bool m_isGrounded;
         private bool m_isShooting;
+        private bool m_isDead;
         private Transform m_cameraTranform;
         private PhotonView m_photonView;
         
-        private float m_playerSpeed = 10.0f;
         private float m_jumpHeight = 1f;
         private float m_gravityValue = -9.81f;
 
@@ -52,23 +54,32 @@ namespace SurvivorZombies.Player.Movement  {
             if (!m_photonView.IsMine) return;
             m_shootAction.started += _ => Shoot(true);
             m_shootAction.canceled += _ => Shoot(false);
+            PlayerConstitution.onCharacterDeath += OnCharacterDeath;
         }
 
         private void OnDisable()  {
             if (!m_photonView.IsMine) return;
             m_shootAction.performed -= _ => Shoot(false);
+            PlayerConstitution.onCharacterDeath -= OnCharacterDeath;
         }
 
         private void Shoot(bool isShooting) {
             if (!m_photonView.IsMine) return;
-            m_isShooting = isShooting;
+            m_isShooting = isShooting; 
         }
 
+        private void OnCharacterDeath(GameObject playerObject) {
+            m_isDead = true;
+        }
+        
         private void FixedUpdate() {
             if (!m_photonView.IsMine) return;
+
+            if (m_isDead) return;
             
             if (m_isShooting) {
-                m_currentWeapon.Shoot();
+                m_photonView.RPC(nameof(m_currentWeapon.Shoot), RpcTarget.All);
+                //m_currentWeapon.Shoot();
             }
 
             m_isGrounded = m_characterController.isGrounded;
@@ -80,7 +91,7 @@ namespace SurvivorZombies.Player.Movement  {
             var move = new Vector3(m_moveAction.ReadValue<Vector2>().x, 0, m_moveAction.ReadValue<Vector2>().y);
             move = move.x * m_cameraTranform.right.normalized + move.z * m_cameraTranform.forward.normalized;
             move.y = 0;
-            m_characterController.Move(move * Time.deltaTime * m_playerSpeed);
+            m_characterController.Move(move * Time.deltaTime * CharacterData.Speed);
 
             if (m_jumpAction.triggered && m_isGrounded) {
                 onJump?.Invoke(gameObject);

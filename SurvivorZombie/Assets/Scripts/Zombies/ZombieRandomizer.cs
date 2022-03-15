@@ -17,5 +17,15 @@ namespace SurvivorZombies.Zombies {
             var random = Random.Range(0, ZombieSkins.Count);
             ZombieSkins[random].gameObject.SetActive(true);
         }
+        
+        // public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
+        //     if (stream.IsWriting) {
+        //         stream.SendNext(ZombieSkins);
+        //     }
+        //     else {
+        //         ZombieSkins = (List<GameObject>) stream.ReceiveNext();
+        //     }
+        // }
+        
     }
 }
