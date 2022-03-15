@@ -30,7 +30,7 @@ namespace SurvivorZombies.Utils {
         }
 
         public void ReloadScene() {
-            m_photonView.RPC("RPC_ReloadScene", RpcTarget.All);RPC_ReloadScene();
+            m_photonView.RPC("RPC_ReloadScene", RpcTarget.All);
         }
 
         public override void OnDisconnected(DisconnectCause cause) {
@@ -54,7 +54,7 @@ namespace SurvivorZombies.Utils {
             if (stream.IsWriting) {
                 stream.SendNext(GameManager.Instance.CurrentScore.text);
             }
-            else {
+            else if(stream.IsReading) {
                 GameManager.Instance.CurrentScore.text = (string) stream.ReceiveNext();
             }
         }

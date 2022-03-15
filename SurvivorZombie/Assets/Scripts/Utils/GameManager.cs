@@ -13,12 +13,15 @@ namespace SurvivorZombies.Utils {
         
         public TextMeshProUGUI BestTextScore;
         public TextMeshProUGUI CurrentScore;
+        public TextMeshProUGUI FinishedScore;
         public GameObject EndGamePanel;
+        public GameObject RetryButton;
 
         public Image PlayerLife;
         public RoomManager RoomManager;
         public WaveManager WaveManager;
-        
+
+        private PhotonView m_photonView;
         private int m_bestScore;
         private int m_currentScore = 0;
         private readonly string m_bestScoreName = "BestScore";
@@ -31,7 +34,8 @@ namespace SurvivorZombies.Utils {
         }
 
         private void Awake() {
-            CurrentScore.text = "Score: " + m_currentScore;
+            CurrentScore.text = "Current Score: " + m_currentScore;
+            m_photonView = GetComponent<PhotonView>();
         }
     
         public void UpdateScore() {
@@ -51,11 +55,13 @@ namespace SurvivorZombies.Utils {
             else {
                 BestTextScore.text = "No best score yet!";
             }
-            CurrentScore.text = "Score on play: " + m_currentScore;
-            EndGamePanel.gameObject.SetActive(true);
+            FinishedScore.text = "Score on play: " + m_currentScore;
+            EndGamePanel.gameObject.SetActive(true); 
+            RetryButton.SetActive(PhotonNetwork.IsMasterClient);
         }
-
+        
         public void OnClickRetryButton() {
+            EndGamePanel.gameObject.SetActive(false);
             RoomManager.ReloadScene();
         }
     }

@@ -45,6 +45,12 @@ MonoBehaviour:
   - RPC_ReloadScene
   - Shoot
   - SpawnBullet
+  - ShowWaveText
+  - ExecuteAttack
+  - EndGame
+  - RPC_UpdateLife
+  - RPC_Damage
+  - RPC_EndGame
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

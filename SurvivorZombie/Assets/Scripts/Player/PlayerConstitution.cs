@@ -17,9 +17,8 @@ namespace SurvivorZombies.Player {
         public void Damage(float damage) {
             if (!PhotonView.IsMine) return;
             if (CurrentHealth <= 0) return;
-            PlayerAnimator.OnHurtAnimation();
             CurrentHealth -= damage;
-            UpdateLife();
+            PhotonView.RPC("RPC_Damage", RpcTarget.All);
         }
 
         public void UpdateLife() {
@@ -32,6 +31,19 @@ namespace SurvivorZombies.Player {
             AudioController.Instance.Play(characterData.DeadSound, AudioController.SoundType.SoundEffect2D, 0.2f);
             CurrentHealth = 0;
             onCharacterDeath?.Invoke(gameObject);
+            PhotonView.RPC("RPC_EndGame", RpcTarget.All);
+        }
+
+        [PunRPC]
+        private void RPC_Damage() {
+            PlayerAnimator.OnHurtAnimation();
+            UpdateLife();
+        }
+        
+        
+        [PunRPC]
+        private void RPC_EndGame() {
+            Cursor.lockState = CursorLockMode.None;
             GameManager.Instance.EndGame();
             PlayerAnimator.OnDeathAnimation();
         }
@@ -40,7 +52,7 @@ namespace SurvivorZombies.Player {
             if (stream.IsWriting) {
                 stream.SendNext(CurrentHealth);
             }
-            else {
+            else if(stream.IsReading) {
                 CurrentHealth = (float) stream.ReceiveNext();
             }
         }

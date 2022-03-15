@@ -32,9 +32,8 @@ namespace SurvivorZombies.Zombies {
         public void Damage(float damage) {
             if (!PhotonView.IsMine) return;
             if (CurrentHealth <= 0) return;
-            ZombieAnimator.OnHurtAnimation();
             CurrentHealth -= damage;
-            UpdateLife();
+            PhotonView.RPC("RPC_Damage", RpcTarget.All);
         }
 
         public void UpdateLife() {
@@ -52,13 +51,19 @@ namespace SurvivorZombies.Zombies {
             Destroy(this);
             ZombieAnimator.OnDeathAnimation();
         }
+
+        [PunRPC]
+        private void RPC_Damage() {
+            ZombieAnimator.OnHurtAnimation();
+            UpdateLife();
+        }
         
         public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info) {
             if (stream.IsWriting) {
                 stream.SendNext(CurrentHealth);
                 stream.SendNext(health.fillAmount);
             }
-            else {
+            else if(stream.IsReading) {
                 CurrentHealth = (float) stream.ReceiveNext();
                 health.fillAmount = (float) stream.ReceiveNext();
             }

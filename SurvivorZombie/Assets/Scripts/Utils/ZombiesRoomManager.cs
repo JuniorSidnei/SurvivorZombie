@@ -21,10 +21,10 @@ namespace SurvivorZombies.Utils {
                 return;
             }
             
-            var randomZombie = Random.Range(0, Zombies.Count - 1);
+            var randomZombie = Random.Range(0, Zombies.Count);
             var zombie = PhotonNetwork.InstantiateRoomObject(Zombies[randomZombie].name, zombiesSpawns[random].position, Quaternion.identity);
             var allPlayers = FindObjectsOfType<PlayerController>();
-            var randomTarget = Random.Range(0, allPlayers.Length - 1);
+            var randomTarget = Random.Range(0, allPlayers.Length);
             if (zombie == null) return;
             zombie.GetComponent<ZombieController>().SetTarget(allPlayers[randomTarget].transform);
         }

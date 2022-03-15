@@ -28,6 +28,7 @@ public class ZombieController : MonoBehaviour {
     private PhotonView m_photonView;
     private bool m_isAttacking;
     private SphereCollider m_triggerCollider;
+    private GameObject m_targetCollider;
     public Vector3 Velocity => m_positionDelta;
 
     private void OnEnable() {
@@ -60,6 +61,7 @@ public class ZombieController : MonoBehaviour {
         if (gameObject != zombie) return;
         m_isAttacking = false;
         m_triggerCollider.enabled = true;
+        m_targetCollider = null;
     }
     
     private void OnDestroyGameobject() {
@@ -118,17 +120,23 @@ public class ZombieController : MonoBehaviour {
     }
     
     private void OnTriggerEnter(Collider other) {
-        if (!m_photonView.IsMine) return;
+        if (!m_photonView.IsMine || m_isDead) return;
         
         if(((1 << other.gameObject.layer) & ObstacleLayer) == 0) {
             return;
         }
 
         if (m_isAttacking) return;
-        
+        m_targetCollider = other.gameObject;
+        m_photonView.RPC("ExecuteAttack", RpcTarget.All);
+    }
+
+    [PunRPC]
+    private void ExecuteAttack() {
         ZombieAnimator.OnAttackAnimation();
         m_isAttacking = true;
         m_triggerCollider.enabled = false;
-        other.GetComponent<IDamagable>().Damage(characterData.Damage);
-    }
+        if (!m_targetCollider) return;
+        m_targetCollider.GetComponent<IDamagable>().Damage(characterData.Damage);
+    } 
 }
