@@ -34,6 +34,7 @@ namespace SurvivorZombies.Utils {
         }
 
         private void Awake() {
+            EndGamePanel.gameObject.SetActive(false);
             CurrentScore.text = "Current Score: " + m_currentScore;
             m_photonView = GetComponent<PhotonView>();
         }

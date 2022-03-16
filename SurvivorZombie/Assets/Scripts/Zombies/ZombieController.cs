@@ -121,7 +121,7 @@ public class ZombieController : MonoBehaviour {
     }
     
     private void OnTriggerEnter(Collider other) {
-        if (!m_photonView.IsMine || m_isDead) return;
+        if (m_isDead) return;
         
         if(((1 << other.gameObject.layer) & ObstacleLayer) == 0) {
             return;
