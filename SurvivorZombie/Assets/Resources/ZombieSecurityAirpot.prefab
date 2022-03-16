@@ -266,6 +266,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 4d34ac6c21e3cce45bda77de62eb1999, type: 3}
   HitSound: {fileID: 8300000, guid: a7244b304019d674e8ba3964f4bd2435, type: 3}
   ZombieAnimator: {fileID: 4772865854554250652}
+  BloodParticle: {fileID: 5793014808724387672, guid: b02de3e064235ee4491cfc410617360e, type: 3}
 --- !u!114 &8930225260067887892
 MonoBehaviour:
   m_ObjectHideFlags: 0

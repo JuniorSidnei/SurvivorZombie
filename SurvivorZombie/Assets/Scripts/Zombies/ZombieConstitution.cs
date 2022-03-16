@@ -12,6 +12,7 @@ namespace SurvivorZombies.Zombies {
         public List<AudioClip> GroamsSounds;
         public AudioClip HitSound;
         public ZombieAnimatorController ZombieAnimator;
+        public GameObject BloodParticle;
         private float m_groamTimer;
         private float m_groamSoundTime;
         
@@ -38,6 +39,7 @@ namespace SurvivorZombies.Zombies {
 
         public void UpdateLife() {
             if (!PhotonView.IsMine) return;
+            Instantiate(BloodParticle, transform.position, Quaternion.identity);
             health.DOFillAmount(CurrentHealth / characterData.MaxHealth, 0.2f);
             var random = Random.Range(0, characterData.HurtSound.Count);
             AudioController.Instance.Play(characterData.HurtSound[random], AudioController.SoundType.SoundEffect2D);

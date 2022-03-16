@@ -97,6 +97,7 @@ public class ZombieController : MonoBehaviour {
                     currentWaypoint++;
                 } else {
                     reachedEndOfPath = true;
+                    m_photonView.RPC("ExecuteAttack", RpcTarget.All);
                     break;
                 }
             } else {

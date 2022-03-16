@@ -6804,7 +6804,6 @@ MonoBehaviour:
   NameWarningMessage: {fileID: 1929464675}
   RoomWarningMessage: {fileID: 159291928}
   JoinRoomWarningMessage: {fileID: 490736277}
-  BestScore: {fileID: 918160206}
   Panels:
   - {fileID: 1921254486}
   - {fileID: 1921974778}

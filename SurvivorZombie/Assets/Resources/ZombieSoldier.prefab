@@ -305,6 +305,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 4d34ac6c21e3cce45bda77de62eb1999, type: 3}
   HitSound: {fileID: 8300000, guid: a7244b304019d674e8ba3964f4bd2435, type: 3}
   ZombieAnimator: {fileID: 2315255387406123552}
+  BloodParticle: {fileID: 5793014808724387672, guid: b02de3e064235ee4491cfc410617360e, type: 3}
 --- !u!114 &1869935274968728744
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -327,32 +328,6 @@ MonoBehaviour:
   - {fileID: 4969611752000002909}
   - {fileID: 8644393114455678633}
   - {fileID: 4701488890082127}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
   sceneViewId: 0
   InstantiationId: 0
   isRuntimeInstantiated: 0
